@@ -51,4 +51,13 @@ echo " Ctrl+C para parar"
 echo "============================================================"
 
 chmod +x "$GODOT"
+
+# Gera o cache .godot/ (tipos class_name, imports) se ainda nao existir ou apos git pull.
+# Sem isso, BuildingData/UnitData nao sao reconhecidos ao rodar headless.
+if [ ! -f "$GAME_DIR/.godot/global_script_class_cache.cfg" ]; then
+    echo "[Server] Gerando cache do projeto (primeira vez ou apos git pull)..."
+    "$GODOT" --headless --path "$GAME_DIR" --import
+    echo "[Server] Cache gerado."
+fi
+
 exec "$GODOT" --headless --path "$GAME_DIR" -- --server --port "$PORT"
